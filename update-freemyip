@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+readonly USAGE="Usage: $0 DOMAIN TOKEN IFNAME"
+readonly DOMAIN=${1?$USAGE}
+readonly TOKEN=${2?$USAGE}
+readonly IFNAME=${3?$USAGE}
+
+get_ip() {
+  ip -4 -br address show "$IFNAME" | tr -s ' ' | cut -d' ' -f3 | cut -d'/' -f1
+}
+
+curl "https://freemyip.com/update?token=${TOKEN}&domain=${DOMAIN}&myip=$(get_ip)"
+host $DOMAIN
